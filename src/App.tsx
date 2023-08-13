@@ -21,9 +21,10 @@ function App() {
   useEffect(() => {
     getAllProduct().then(({ data }) => setProducts(data));
   }, []);
-  const onHandleRemove = (id: number) => {
+
+  const onHandleRemove = (id: number | string) => {
     deleteProduct(id).then(() =>
-      setProducts(products.filter((item: IProduct) => item.id !== id))
+      getAllProduct().then(({ data }) => setProducts(data))
     );
   };
   const onHandleAdd = (product: IProduct) => {
@@ -47,10 +48,7 @@ function App() {
               <ProductPage products={products} onRemove={onHandleRemove} />
             }
           />
-          <Route
-            path='products/:id'
-            element={<ProductDetailPage products={products} />}
-          />
+          <Route path='products/:id' element={<ProductDetailPage />} />
         </Route>
         <Route path='/admin'>
           <Route path='products'>
@@ -69,12 +67,7 @@ function App() {
             />
             <Route
               path=':id/update'
-              element={
-                <UpdateProductPage
-                  onUpdate={onHandleUpdate}
-                  products={products}
-                />
-              }
+              element={<UpdateProductPage onUpdate={onHandleUpdate} />}
             />
           </Route>
         </Route>
